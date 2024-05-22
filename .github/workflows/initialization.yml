@@ -1,33 +1,8 @@
 name: Repository Initialization
 
 on: 
-  push:
   workflow_dispatch:
 
 jobs:
-  check-repo-creation:
-    runs-on: ubuntu-latest
-    outputs:
-      is_first_commit: ${{ steps.check_first_commit.outputs.is_first_commit }}
-
-    steps:
-      - name: Checkout repository
-        uses: actions/checkout@v2
-
-      - name: Get commit count
-        id: get_commit_count
-        run: echo "::set-output name=count::$(git rev-list --count HEAD)"
-
-      - name: Check if this is the first commit
-        id: check_first_commit
-        run: |
-          if [ "${{ steps.get_commit_count.outputs.count }}" -eq "1" ]; then
-            echo "::set-output name=is_first_commit::true"
-          else
-            echo "::set-output name=is_first_commit::false"
-          fi
-
   run-init:
-    needs: check-repo-creation
-    if: needs.check-repo-creation.outputs.is_first_commit == 'true'
     uses: wwwDayDream-Modding/github-workflows/.github/workflows/init.yml@main
