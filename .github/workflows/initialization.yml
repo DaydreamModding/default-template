@@ -16,19 +16,16 @@ jobs:
 
       - name: Get commit count
         id: get_commit_count
-        run: |
-          echo "COUNT=$(git rev-list --count HEAD)" >> $GITHUB_ENV
+        run: echo "::set-output name=count::$(git rev-list --count HEAD)"
 
       - name: Check if this is the first commit
         id: check_first_commit
         run: |
-          if [ "$COUNT" -eq "1" ]; then
-            echo "is_first_commit=true" >> $GITHUB_ENV
+          if [ "${{ steps.get_commit_count.outputs.count }}" -eq "1" ]; then
+            echo "::set-output name=is_first_commit::true"
           else
-            echo "is_first_commit=false" >> $GITHUB_ENV
+            echo "::set-output name=is_first_commit::false"
           fi
-        env:
-          COUNT: ${{ env.COUNT }}
 
   run-init:
     needs: check-repo-creation
