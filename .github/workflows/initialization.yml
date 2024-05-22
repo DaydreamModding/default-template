@@ -25,9 +25,8 @@ jobs:
           else
             echo "This is not the first commit"
           fi
-          
-      - name: Run reusable build
-        if: ${{ steps.get_commit_count.outputs.count == 1 }}
-        uses: wwwDayDream-Modding/github-workflows/.github/workflows/init.yml@main
-        with:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+  run-init:
+    if: ${{ steps.get_commit_count.outputs.count == 1 }}
+    uses: wwwDayDream-Modding/github-workflows/.github/workflows/init.yml@main
+    secrets:
+      GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
