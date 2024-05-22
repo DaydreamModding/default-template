@@ -31,5 +31,3 @@ jobs:
     needs: check-repo-creation
     if: needs.check-repo-creation.outputs.is_first_commit == 'true'
     uses: wwwDayDream-Modding/github-workflows/.github/workflows/init.yml@main
-    with:
-      GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
