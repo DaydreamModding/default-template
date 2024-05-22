@@ -8,7 +8,7 @@ jobs:
   check-repo-creation:
     runs-on: ubuntu-latest
     outputs:
-      is_first_commit: ${{ steps.get_commit_count.outputs.is_first_commit }}
+      is_first_commit: ${{ steps.check_first_commit.outputs.is_first_commit }}
 
     steps:
       - name: Checkout repository
@@ -16,17 +16,19 @@ jobs:
 
       - name: Get commit count
         id: get_commit_count
-        run: echo "::set-output name=count::$(git rev-list --count HEAD)"
+        run: echo "count=$(git rev-list --count HEAD)" >> $GITHUB_ENV
 
       - name: Check if this is the first commit
+        id: check_first_commit
         run: |
-          if [ "${{ steps.get_commit_count.outputs.count }}" -eq "1" ]; then
-            echo "This is the first commit"
-            # Place additional steps to run if this is the first commit
-            # Example: Trigger another workflow, set up initial configuration, etc.
+          if [ "${{ env.count }}" -eq "1" ]; then
+            echo "is_first_commit=true" >> $GITHUB_ENV
           else
-            echo "This is not the first commit"
+            echo "is_first_commit=false" >> $GITHUB_ENV
           fi
+        env:
+          count: ${{ steps.get_commit_count.outputs.count }}
+
   run-init:
     needs: check-repo-creation
     if: needs.check-repo-creation.outputs.is_first_commit == 'true'
