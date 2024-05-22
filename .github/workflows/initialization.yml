@@ -1,10 +1,11 @@
-name: Repository Initialization
+name: Repository Setup
 
 on: 
   workflow_dispatch:
 
 jobs:
   run-init:
+    name: Initial Repository Setup
     uses: wwwDayDream-Modding/github-workflows/.github/workflows/init.yml@main
     secrets:
       org_pat: ${{ secrets.ORG_PAT }}
