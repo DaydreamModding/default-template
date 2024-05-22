@@ -7,6 +7,8 @@ on:
 jobs:
   check-repo-creation:
     runs-on: ubuntu-latest
+    outputs:
+      is_first_commit: ${{ steps.get_commit_count.outputs.is_first_commit }}
 
     steps:
       - name: Checkout repository
@@ -26,7 +28,8 @@ jobs:
             echo "This is not the first commit"
           fi
   run-init:
-    if: ${{ steps.get_commit_count.outputs.count == 1 }}
+    needs: check-repo-creation
+    if: needs.check-repo-creation.outputs.is_first_commit == 'true'
     uses: wwwDayDream-Modding/github-workflows/.github/workflows/init.yml@main
     with:
       GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
