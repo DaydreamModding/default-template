@@ -28,5 +28,5 @@ jobs:
   run-init:
     if: ${{ steps.get_commit_count.outputs.count == 1 }}
     uses: wwwDayDream-Modding/github-workflows/.github/workflows/init.yml@main
-    secrets:
+    with:
       GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
