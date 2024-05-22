@@ -4,8 +4,31 @@ on:
   workflow_dispatch:
 
 jobs:
+  ascertain-repo-details:
+    name: Extract Repo Info
+    runs-on: ubuntu-latest
+    outputs:
+      repo_title: ${{ steps.repo_info.outputs.repo_title }}
+      repo_description: ${{ steps.repo_info.outputs.repo_description }}
+      repo_topics: ${{ steps.repo_info.outputs.repo_topics }}
+    steps:
+      - name: Checkout current repository
+        uses: actions/checkout@v2
+
+      - name: Get repository details
+        id: repo_info
+        run: |
+          echo "repo_title=$(jq -r .name < $(basename "$GITHUB_REPOSITORY"))" >> $GITHUB_OUTPUT
+          echo "repo_description=$(jq -r .description < $(basename "$GITHUB_REPOSITORY"))" >> $GITHUB_OUTPUT
+          echo "repo_topics=$(jq -r '.topics | join(",")' < $(basename "$GITHUB_REPOSITORY"))" >> $GITHUB_OUTPUT
+
   run-init:
     name: Initial Repository Setup
+    needs: ascertain-repo-details
     uses: wwwDayDream-Modding/github-workflows/.github/workflows/init.yml@main
     secrets:
       org_pat: ${{ secrets.ORG_PAT }}
+    with: 
+      repo_title: ${{ needs.ascertain-repo-details.outputs.repo_title }}
+      repo_description: ${{ needs.ascertain-repo-details.outputs.repo_description }}
+      repo_topics: ${{ needs.ascertain-repo-details.outputs.repo_topics }}
