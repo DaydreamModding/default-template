@@ -6,3 +6,6 @@ on:
 jobs:
   run-init:
     uses: wwwDayDream-Modding/github-workflows/.github/workflows/init.yml@main
+    secrets:
+      day_pat: ${{ secrets.DAY_PAT }}
+      org_pat: ${{ secrets.ORG_PAT }}
