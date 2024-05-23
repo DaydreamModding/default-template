@@ -17,10 +17,13 @@ jobs:
 
       - name: Get repository details
         id: repo_info
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
-          echo "repo_title=$(jq -r .name < $(basename "$GITHUB_REPOSITORY"))" >> $GITHUB_OUTPUT
-          echo "repo_description=$(jq -r .description < $(basename "$GITHUB_REPOSITORY"))" >> $GITHUB_OUTPUT
-          echo "repo_topics=$(jq -r '.topics | join(",")' < $(basename "$GITHUB_REPOSITORY"))" >> $GITHUB_OUTPUT
+          repo_data=$(curl -s -H "Authorization: token $GITHUB_TOKEN" https://api.github.com/repos/${{ github.repository }})
+          echo "repo_title=$(echo $repo_data | jq -r .name)" >> $GITHUB_OUTPUT
+          echo "repo_description=$(echo $repo_data | jq -r .description)" >> $GITHUB_OUTPUT
+          echo "repo_topics=$(echo $repo_data | jq -r '.topics | join(",")')" >> $GITHUB_OUTPUT
 
   run-init:
     name: Initial Repository Setup
