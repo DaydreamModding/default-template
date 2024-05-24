@@ -6,6 +6,6 @@ on:
 jobs:
   run-init:
     name: Initial Repository Setup
-    uses: wwwDayDream-Modding/github-workflows/.github/workflows/init.yml@main
+    uses: RedEyeMods/github-workflows/.github/workflows/init.yml@main
     secrets:
       org_pat: ${{ secrets.ORG_PAT }}
